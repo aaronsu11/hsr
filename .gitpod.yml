@@ -1,1 +1,2 @@
-image: ros:noetic-robot
+image:
+  file: .gitpod.Dockerfile

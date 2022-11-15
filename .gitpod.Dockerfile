@@ -45,6 +45,21 @@ ARG IMAGE_WS_DIR=/home/$USERNAME/workspace
 FROM public.ecr.aws/docker/library/ros:${ROS_DISTRO}-ros-base AS ros-robomaker-base
 ARG USERNAME
 
+RUN apt-get clean
+RUN apt-get update && apt-get install -y \
+    lsb  \
+    unzip \
+    wget \
+    curl \
+    xterm \
+    python3-colcon-common-extensions \
+    devilspie \
+    xfce4-terminal
+
+RUN groupadd $USERNAME && \
+    useradd -ms /bin/bash -g $USERNAME $USERNAME && \
+    sh -c 'echo "$USERNAME ALL=(root) NOPASSWD:ALL" >> /etc/sudoers'
+
 # Install:
 # - git (and git-lfs), for git operations (to e.g. push your work).
 #   Also required for setting up your configured dotfiles in the workspace.
@@ -62,17 +77,5 @@ RUN useradd -l -u 33333 -G sudo -md /home/gitpod -s /bin/bash -p gitpod gitpod
 
 USER gitpod
 
-RUN apt-get update && apt-get install -y \
-    lsb  \
-    unzip \
-    wget \
-    curl \
-    xterm \
-    python3-colcon-common-extensions \
-    devilspie \
-    xfce4-terminal
 
-RUN groupadd $USERNAME && \
-    useradd -ms /bin/bash -g $USERNAME $USERNAME && \
-    sh -c 'echo "$USERNAME ALL=(root) NOPASSWD:ALL" >> /etc/sudoers'
 
